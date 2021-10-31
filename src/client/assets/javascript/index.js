@@ -172,6 +172,8 @@ function handleAccelerate() {
 // Provided code - do not remove
 
 function renderRacerCars(racers) {
+	console.log(`Racers are here:`)
+	console.log(racers)
 	if (!racers.length) {
 		return `
 			<h4>Loading Racers...</4>
@@ -182,7 +184,7 @@ function renderRacerCars(racers) {
 
 	return `
 		<ul id="racers">
-			${reuslts}
+			${results}
 		</ul>
 	`
 }
@@ -201,6 +203,8 @@ function renderRacerCard(racer) {
 }
 
 function renderTrackCards(tracks) {
+	console.log('These are the tracks')
+	console.log(tracks)
 	if (!tracks.length) {
 		return `
 			<h4>Loading Tracks...</4>
@@ -321,10 +325,18 @@ function defaultFetchOpts() {
 
 function getTracks() {
 	// GET request to `${SERVER}/api/tracks`
+	return fetch(`${SERVER}/api/tracks`)
+		.then(res => res.json())
+		.then(tracks => tracks)
+		.catch(err => console.log(`There was a problem with getTracks request:`, err));
 }
 
 function getRacers() {
 	// GET request to `${SERVER}/api/cars`
+	return fetch(`${SERVER}/api/cars`)
+	.then(res =>res.json())
+		.then(cars => cars)
+		.catch(err => console.log(`There was a problem with get Racers request: `, err))
 }
 
 function createRace(player_id, track_id) {
