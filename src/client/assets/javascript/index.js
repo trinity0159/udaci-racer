@@ -74,12 +74,16 @@ async function delay(ms) {
 
 // This async function controls the flow of the race, add the logic and error handling
 async function handleCreateRace() {
-	// render starting UI
-	renderAt('#race', renderRaceStartView())
+
 
 	// TODO - Get player_id and track_id from the store
+	console.log(store)
+	const {player_id, track_id} = store
+	// render starting UI
+	renderAt('#race', renderRaceStartView(track_id, player_id))
 	
 	// const race = TODO - invoke the API call to create the race, then save the result
+	const race = await createRace(player_id, track_id)
 
 	// TODO - update the store with the race id
 
@@ -145,6 +149,7 @@ function handleSelectPodRacer(target) {
 	target.classList.add('selected')
 
 	// TODO - save the selected racer to the store
+	store.player_id = parseInt(target.id)
 }
 
 function handleSelectTrack(target) {
@@ -160,7 +165,7 @@ function handleSelectTrack(target) {
 	target.classList.add('selected')
 
 	// TODO - save the selected track id to the store
-	
+	store.track_id = parseInt(target.id)
 }
 
 function handleAccelerate() {
@@ -172,8 +177,7 @@ function handleAccelerate() {
 // Provided code - do not remove
 
 function renderRacerCars(racers) {
-	console.log(`Racers are here:`)
-	console.log(racers)
+
 	if (!racers.length) {
 		return `
 			<h4>Loading Racers...</4>
@@ -203,8 +207,6 @@ function renderRacerCard(racer) {
 }
 
 function renderTrackCards(tracks) {
-	console.log('These are the tracks')
-	console.log(tracks)
 	if (!tracks.length) {
 		return `
 			<h4>Loading Tracks...</4>
@@ -238,6 +240,7 @@ function renderCountdown(count) {
 }
 
 function renderRaceStartView(track, racers) {
+
 	return `
 		<header>
 			<h1>Race: ${track.name}</h1>
@@ -328,7 +331,7 @@ function getTracks() {
 	return fetch(`${SERVER}/api/tracks`)
 		.then(res => res.json())
 		.then(tracks => tracks)
-		.catch(err => console.log(`There was a problem with getTracks request:`, err));
+		.catch(err => console.log(`There was a problem with getTracks request::`, err));
 }
 
 function getRacers() {
@@ -336,7 +339,7 @@ function getRacers() {
 	return fetch(`${SERVER}/api/cars`)
 	.then(res =>res.json())
 		.then(cars => cars)
-		.catch(err => console.log(`There was a problem with get Racers request: `, err))
+		.catch(err => console.log(`There was a problem with getRacers request:: `, err))
 }
 
 function createRace(player_id, track_id) {
@@ -356,6 +359,11 @@ function createRace(player_id, track_id) {
 
 function getRace(id) {
 	// GET request to `${SERVER}/api/races/${id}`
+	return fetch(`${SERVER}/api/races/${id}`)
+		.then(res => res.json())
+		.then(raceID => raceID)
+		.catch(err => console.log(`There was a problem with getRaceID request::`, err))
+
 }
 
 function startRace(id) {
